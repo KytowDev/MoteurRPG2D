@@ -3,19 +3,51 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "test.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "atlas_floor-16x16.tsx": {
+            "scaleInDock": 1
+        },
+        "atlas_walls_low-16x16.tsx": {
+            "scaleInDock": 2
+        },
+        "dungeon-tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "main.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 247.33333333333331,
+                "y": 142.33333333333331
+            }
+        },
+        "test.tmx": {
+            "scale": 3,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 369,
+                "y": 193.49999999999997
+            }
+        }
     },
     "last.imagePath": "C:/Users/kytog/Desktop/MoteurRPG2D/assets/maps",
+    "map.height": 27,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
+    "map.width": 48,
     "openFiles": [
+        "main.tmx",
+        "test.tmx"
     ],
     "project": "main.tiled-project",
     "recentFiles": [
+        "main.tmx",
+        "test.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
