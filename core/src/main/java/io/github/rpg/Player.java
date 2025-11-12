@@ -4,57 +4,63 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player {
+public class Player extends Entity {
 
-    private static final float SPEED = 150f;
-    private Texture sprite;
-    private Vector2 position;
-    private Vector2 velocity;
-    private Texture sheet;
-    private Animation<TextureRegion> animWalk;
+    public Player(Vector2 spawn_pos, Texture idleSheet, Texture runSheet) {
+        super(spawn_pos, 150f); // Le joueur a une vitesse de 150
 
-    public Player(Vector2 spawn_pos, Texture sprite) {
-        this.position = spawn_pos;
-        this.sprite = sprite;
-        this.velocity = new Vector2(0,0);
+        // Le JOUEUR connaît ses propres dimensions
+        int frameWidth = 16;
+        int frameHeight = 28;
+        int framesCount = 4;
+
+        // Le JOUEUR crée sa propre hitbox
+        int hitboxHeightReduction = 8;
+        this.hitbox = new Rectangle(
+            spawn_pos.x,
+            spawn_pos.y,
+            frameWidth,
+            frameHeight - hitboxHeightReduction
+        );
+
+        // Le JOUEUR crée ses propres animations
+        TextureRegion[][] tmpIdle = TextureRegion.split(idleSheet, frameWidth, frameHeight);
+        TextureRegion[] idleFrames = new TextureRegion[framesCount];
+        for (int i=0; i < framesCount; i++) {
+            idleFrames[i] = tmpIdle[0][i];
+        }
+        this.idleAnim = new Animation<TextureRegion>(0.1f, idleFrames);
+
+        TextureRegion[][] tmpRun = TextureRegion.split(runSheet, frameWidth, frameHeight);
+        TextureRegion[] runFrames = new TextureRegion[framesCount];
+        for (int i=0; i < framesCount; i++) {
+            runFrames[i] = tmpRun[0][i];
+        }
+        this.runAnim = new Animation<TextureRegion>(0.08f, runFrames);
     }
 
-    public void update(float delta) {
-        position.add(velocity.cpy().scl(delta));
+    @Override
+    protected void decideNextMove(float delta, Player player) {
+        handleInput();
     }
 
-    public void moveUp() {
-        this.velocity.y = SPEED;
+    private void handleInput() {
+        stopMoving();
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            moveUp();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)){
+            moveDown();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            moveLeft();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)){
+            moveRight();
+        }
     }
-
-    public void moveDown() {
-        this.velocity.y = -SPEED;
-    }
-
-    public void moveRight() {
-        this.velocity.x = SPEED;
-    }
-
-    public void moveLeft() {
-        this.velocity.x = -SPEED;
-    }
-
-    public void stopMoving() {
-        this.velocity.set(0,0);
-    }
-
-    public Vector2 getPosition() {
-        return this.position;
-    }
-
-    public void render(SpriteBatch batch) {
-        batch.draw(this.sprite, this.position.x, this.position.y);
-
-    }
-
-    public void dispose(){}
 }
