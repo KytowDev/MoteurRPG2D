@@ -1,9 +1,9 @@
 package io.github.rpg;
 
-public class StandStillBehavior implements BehaviorStrategy {
+public class StandStillBehavior implements EnemyBehavior {
 
     @Override
-    public void decideMove(Entity self, Player target, float delta) {
-        self.stopMoving();
+    public void act(Monster monster, Player player, float delta) {
+        monster.stopMoving();
     }
 }

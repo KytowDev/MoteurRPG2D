@@ -9,43 +9,79 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Entity {
 
-    public enum State {
-        IDLE,
-        RUNNING
-    }
+    public enum State { IDLE, RUNNING }
 
     protected Vector2 position;
     protected Vector2 velocity;
     protected Rectangle hitbox;
 
+    protected int hp;
+    protected int maxHp;
+    protected boolean isDead;
+
     protected State currentState;
-    protected boolean facingRight = true;
+    public boolean facingRight = true;
     protected float stateTime;
-    protected float speed; // La vitesse N'EST PLUS une constante
+    protected float speed;
 
     protected Animation<TextureRegion> idleAnim;
     protected Animation<TextureRegion> runAnim;
 
-    public Entity(Vector2 spawn_pos, float speed) {
+    public Entity(Vector2 spawn_pos, float speed, int maxHp) {
         this.position = spawn_pos;
-        this.speed = speed; // La vitesse est maintenant unique à chaque entité
+        this.speed = speed;
+        this.maxHp = maxHp;
+        this.hp = maxHp;
         this.velocity = new Vector2(0,0);
         this.stateTime = 0f;
         this.currentState = State.IDLE;
-        // L'animation et la hitbox sont initialisées par l'enfant (Player, Monster)
+        this.isDead = false;
     }
 
-    public final void update(float delta, Array<Rectangle> collisionRects, Player player) {
+    public final void update(float delta, Array<Rectangle> walls, Player player, Array<Entity> allEntities) {
         stateTime += delta;
+        decideNextMove(delta, player, allEntities);
+        applyCollisions(delta, walls);
+    }
+    public void setVelocity(float x, float y) {
+        this.velocity.set(x, y);
 
-        decideNextMove(delta, player);
-        applyCollisions(delta, collisionRects);
+        if (x != 0 || y != 0) {
+            this.currentState = State.RUNNING;
+        } else {
+            this.currentState = State.IDLE;
+        }
+
+        if (x > 0) {
+            this.facingRight = true;
+        } else if (x < 0) {
+            this.facingRight = false;
+        }
     }
 
-    protected abstract void decideNextMove(float delta, Player player);
+    public float getSpeed() {
+        return this.speed;
+    }
+
+    protected abstract void decideNextMove(float delta, Player player, Array<Entity> allEntities);
+
+    public void takeDamage(int amount) {
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            this.isDead = true;
+        }
+    }
+
+    public boolean isDead() {
+        return this.isDead;
+    }
+
+    public Rectangle getBounds() {
+        return this.hitbox;
+    }
 
     protected void applyCollisions(float delta, Array<Rectangle> collisionRects) {
-        if (this.hitbox == null) return; // Sécurité si l'enfant n'a pas de hitbox
+        if (this.hitbox == null) return;
 
         float moveX = velocity.x * delta;
         hitbox.x += moveX;
@@ -68,29 +104,13 @@ public abstract class Entity {
                 break;
             }
         }
-
-        // C'est la version corrigée qui gère l'offset
         position.set(hitbox.x, hitbox.y);
     }
 
-    public void moveUp() {
-        this.velocity.y = this.speed; // Utilise la vitesse de l'instance
-        this.currentState = State.RUNNING;
-    }
-    public void moveDown() {
-        this.velocity.y = -this.speed;
-        this.currentState = State.RUNNING;
-    }
-    public void moveRight() {
-        this.velocity.x = this.speed;
-        this.currentState = State.RUNNING;
-        this.facingRight = true;
-    }
-    public void moveLeft() {
-        this.velocity.x = -this.speed;
-        this.currentState = State.RUNNING;
-        this.facingRight = false;
-    }
+    public void moveUp() { this.velocity.y = this.speed; this.currentState = State.RUNNING; }
+    public void moveDown() { this.velocity.y = -this.speed; this.currentState = State.RUNNING; }
+    public void moveRight() { this.velocity.x = this.speed; this.currentState = State.RUNNING; this.facingRight = true; }
+    public void moveLeft() { this.velocity.x = -this.speed; this.currentState = State.RUNNING; this.facingRight = false; }
 
     public void stopMoving() {
         if (!velocity.isZero()) {
@@ -99,33 +119,16 @@ public abstract class Entity {
         }
     }
 
-    public Vector2 getPosition() {
-        return this.position;
-    }
+    public Vector2 getPosition() { return this.position; }
 
     public void render(SpriteBatch batch) {
-        if (idleAnim == null || runAnim == null) return; // Sécurité
-
-        Animation<TextureRegion> animation;
-        if (currentState == State.RUNNING) {
-            animation = runAnim;
-        } else {
-            animation = idleAnim;
-        }
-
+        if (idleAnim == null || runAnim == null) return;
+        Animation<TextureRegion> animation = (currentState == State.RUNNING) ? runAnim : idleAnim;
         TextureRegion currentFrame = animation.getKeyFrame(stateTime, true);
 
-        if (!facingRight && !currentFrame.isFlipX()) {
-            currentFrame.flip(true, false);
-        }
-        if (facingRight && currentFrame.isFlipX()) {
-            currentFrame.flip(true, false);
-        }
+        if (!facingRight && !currentFrame.isFlipX()) currentFrame.flip(true, false);
+        if (facingRight && currentFrame.isFlipX()) currentFrame.flip(true, false);
 
-        // On suppose que la hitbox est aux pieds (position.y)
-        // et que le constructeur de l'enfant a géré l'offset
         batch.draw(currentFrame, this.position.x, this.position.y);
     }
-
-    public void dispose(){}
 }

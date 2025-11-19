@@ -1,11 +1,33 @@
 package io.github.rpg;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
+
+    public SpriteBatch batch;
+
     @Override
     public void create() {
-        setScreen(new PlayScreen(this));
+        this.batch = new SpriteBatch();
+        Assets.load();
+        Assets.manager.finishLoading();
+        loadLevel("maps/hub.tmx");
+    }
+
+    public void loadLevel(String mapPath) {
+        setScreen(new PlayScreen(this, mapPath));
+    }
+
+    @Override
+    public void render() {
+        super.render();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        this.batch.dispose();
+        Assets.dispose();
     }
 }

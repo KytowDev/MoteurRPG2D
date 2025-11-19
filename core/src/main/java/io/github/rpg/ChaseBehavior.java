@@ -2,29 +2,31 @@ package io.github.rpg;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class ChaseBehavior implements BehaviorStrategy {
+public class ChaseBehavior implements EnemyBehavior {
 
     @Override
-    public void decideMove(Entity self, Player target, float delta) {
-        if (target == null) {
-            self.stopMoving();
-            return;
-        }
+    public void act(Monster monster, Player player, float delta) {
+        // 1. On récupère les positions
+        Vector2 monsterPos = monster.getPosition();
+        Vector2 playerPos = player.getPosition();
 
-        self.stopMoving();
+        // 2. On calcule la distance à vol d'oiseau (Euclidienne)
+        float distance = monsterPos.dst(playerPos);
 
-        Vector2 selfPos = self.getPosition();
-        Vector2 targetPos = target.getPosition();
+        // 3. Logique de seuil simple :
+        // Si on est trop loin (> 150px), on lâche l'affaire
+        // Si on est trop près (< 10px), on s'arrête pour ne pas "fusionner" avec le joueur
+        // Entre les deux : ON FONCE
+        if (distance < 150 && distance > 10) {
+            Vector2 direction = new Vector2(playerPos).sub(monsterPos);
+            direction.nor(); // Normalise (transforme en flèche de longueur 1)
 
-        float dx = targetPos.x - selfPos.x;
-        float dy = targetPos.y - selfPos.y;
-
-        if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0) self.moveRight();
-            else self.moveLeft();
+            monster.setVelocity(
+                direction.x * monster.getSpeed(),
+                direction.y * monster.getSpeed()
+            );
         } else {
-            if (dy > 0) self.moveUp();
-            else self.moveDown();
+            monster.setVelocity(0, 0);
         }
     }
 }
