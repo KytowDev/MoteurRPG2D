@@ -16,7 +16,7 @@ public class Sword implements Weapon {
     private final float ATTACK_ANIM_DURATION = 0.2f;
     private final float SWING_ARC = 120f;
     private final int damage = 25;
-    private final float range = 24f;
+    private final float range = 15f;
     private final float knockbackPower = 250f;
     private final TextureRegion texture;
     private final float pivotOffsetX;
@@ -38,15 +38,16 @@ public class Sword implements Weapon {
         if (cooldown > 0) return;
         cooldown = ATTACK_SPEED;
         attackAnimTimer = ATTACK_ANIM_DURATION;
-        float hitX = user.facingRight ? user.getPosition().x + 16 : user.getPosition().x - range;
+        float hitX = user.facingRight ? user.getPosition().x + 14 : user.getPosition().x + 2 - range;
         Rectangle damageRect = new Rectangle(hitX, user.getPosition().y, range, 28);
-        for (Entity target : targets) hitEntity(user, target, damageRect);
+        for (Entity target : targets) {
+            if (target != user) hitEntity(user, target, damageRect);
+        }
     }
 
     private void hitEntity(Entity user, Entity target, Rectangle damageRect) {
         if (damageRect.overlaps(target.getBounds())) {
-            target.takeDamage(damage);
-            target.applyKnockback(target.getPosition().cpy().sub(user.getPosition()).nor().scl(knockbackPower));
+            target.receiveDamage(damage, user.getPosition());
         }
     }
 

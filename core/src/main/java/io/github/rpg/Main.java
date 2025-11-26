@@ -1,6 +1,7 @@
 package io.github.rpg;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main extends Game {
@@ -16,7 +17,10 @@ public class Main extends Game {
     }
 
     public void loadLevel(String mapPath) {
-        setScreen(new PlayScreen(this, mapPath));
+        Gdx.app.postRunnable(() -> {
+            if (getScreen() != null) getScreen().dispose();
+            setScreen(new PlayScreen(this, mapPath));
+        });
     }
 
     @Override
@@ -26,6 +30,7 @@ public class Main extends Game {
 
     @Override
     public void dispose() {
+        if (getScreen() != null) getScreen().dispose();
         super.dispose();
         this.batch.dispose();
         Assets.dispose();

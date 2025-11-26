@@ -10,10 +10,9 @@ import com.badlogic.gdx.utils.Array;
 public class Monster extends Entity {
 
     private final EnemyBehavior behavior;
-    private final Vector2 knockback = new Vector2(0, 0);
 
     public Monster(Vector2 pos, Texture idle, Texture run, float spd, EnemyBehavior behavior, int w, int h, int frames) {
-        super(pos, spd, 150);
+        super(pos, spd, 50);
         this.behavior = behavior;
         this.hitbox = new Rectangle(pos.x, pos.y, w, h);
         this.idleAnim = createAnim(idle, w, h, frames);
@@ -29,21 +28,6 @@ public class Monster extends Entity {
 
     @Override
     protected void decideNextMove(float delta, Array<Rectangle> collisions, Player player, Array<Entity> allEntities) {
-        if (knockback.len() > 10f) {
-            handleKnockback(delta, collisions);
-        } else {
-            behavior.act(this, player, collisions, delta);
-        }
-    }
-
-    private void handleKnockback(float delta, Array<Rectangle> collisions) {
-        // Le knockback utilise aussi la méthode move pour ne pas traverser les murs
-        move(knockback.x * delta, knockback.y * delta, collisions);
-        knockback.scl(0.85f);
-    }
-
-    @Override
-    public void applyKnockback(Vector2 force) {
-        knockback.set(force);
+        if (knockback.len() < 10f) behavior.act(this, player, collisions, delta);
     }
 }

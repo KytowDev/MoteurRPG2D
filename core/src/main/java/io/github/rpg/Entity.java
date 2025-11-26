@@ -19,6 +19,8 @@ public abstract class Entity {
     protected Animation<TextureRegion> idleAnim;
     protected Animation<TextureRegion> runAnim;
     protected boolean isMoving = false;
+    protected Vector2 knockback = new Vector2(0, 0);
+    protected float immunityTimer = 0;
 
     public Entity(Vector2 pos, float speed, int health) {
         this.pos = pos;
@@ -27,6 +29,13 @@ public abstract class Entity {
     }
 
     public void update(float delta, Array<Rectangle> mapCollisions, Player player, Array<Entity> allEntities) {
+        if (immunityTimer > 0) immunityTimer -= delta;
+
+        if (knockback.len() > 10f) {
+            move(knockback.x * delta, knockback.y * delta, mapCollisions);
+            knockback.scl(0.90f);
+        }
+
         decideNextMove(delta, mapCollisions, player, allEntities);
         hitbox.setPosition(pos.x, pos.y);
     }
@@ -38,7 +47,10 @@ public abstract class Entity {
         TextureRegion currentFrame = isMoving ? runAnim.getKeyFrame(stateTime, true) : idleAnim.getKeyFrame(stateTime, true);
         if (!currentFrame.isFlipX() && !facingRight) currentFrame.flip(true, false);
         if (currentFrame.isFlipX() && facingRight) currentFrame.flip(true, false);
+
+        if (immunityTimer > 0 && ((int)(stateTime * 20) % 2 == 0)) batch.setColor(1, 0, 0, 0.5f);
         batch.draw(currentFrame, pos.x, pos.y);
+        batch.setColor(1, 1, 1, 1);
     }
 
     public void move(float x, float y, Array<Rectangle> collisions) {
@@ -53,14 +65,18 @@ public abstract class Entity {
         isMoving = x != 0 || y != 0;
         if (x > 0) facingRight = true;
         if (x < 0) facingRight = false;
-
         hitbox.setPosition(pos.x, pos.y);
     }
 
+    public void receiveDamage(int amount, Vector2 sourcePos) {
+        if (immunityTimer > 0) return;
+        health -= amount;
+        immunityTimer = 0.5f;
+        knockback.set(pos.cpy().sub(sourcePos).nor().scl(250f));
+    }
+
     public float getSpeed() { return speed; }
-    public void takeDamage(int amount) { health -= amount; }
     public boolean isDead() { return health <= 0; }
     public Rectangle getBounds() { return hitbox; }
     public Vector2 getPosition() { return pos; }
-    public void applyKnockback(Vector2 force) {}
 }
