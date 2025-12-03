@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "test.tmx",
+    "activeFile": "hub.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -18,8 +18,12 @@
             "scaleInDock": 1.5
         },
         "dungeon1.tmx": {
+            "expandedObjectLayers": [
+                6,
+                5
+            ],
             "scale": 2,
-            "selectedLayer": 4,
+            "selectedLayer": 3,
             "viewCenter": {
                 "x": 411,
                 "y": 185.75
@@ -31,11 +35,11 @@
         },
         "hub.tmx": {
             "expandedObjectLayers": [
-                5,
-                6
+                6,
+                5
             ],
             "scale": 2,
-            "selectedLayer": 5,
+            "selectedLayer": 1,
             "viewCenter": {
                 "x": 316.5,
                 "y": 284.25
@@ -68,17 +72,17 @@
     "map.tileWidth": 16,
     "map.width": 40,
     "openFiles": [
-        "main.tmx",
-        "test.tmx",
         "hub.tmx",
-        "extruded_low_walls.tsx"
+        "extruded_low_walls.tsx",
+        "dungeon1.tmx"
     ],
     "project": "main.tiled-project",
     "recentFiles": [
-        "test.tmx",
-        "main.tmx",
+        "dungeon1.tmx",
         "extruded_low_walls.tsx",
-        "hub.tmx"
+        "hub.tmx",
+        "test.tmx",
+        "main.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 1,

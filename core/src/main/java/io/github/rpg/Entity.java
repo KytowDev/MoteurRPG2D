@@ -30,12 +30,10 @@ public abstract class Entity {
 
     public void update(float delta, Array<Rectangle> mapCollisions, Player player, Array<Entity> allEntities) {
         if (immunityTimer > 0) immunityTimer -= delta;
-
         if (knockback.len() > 10f) {
             move(knockback.x * delta, knockback.y * delta, mapCollisions);
             knockback.scl(0.90f);
         }
-
         decideNextMove(delta, mapCollisions, player, allEntities);
         hitbox.setPosition(pos.x, pos.y);
     }
@@ -47,7 +45,6 @@ public abstract class Entity {
         TextureRegion currentFrame = isMoving ? runAnim.getKeyFrame(stateTime, true) : idleAnim.getKeyFrame(stateTime, true);
         if (!currentFrame.isFlipX() && !facingRight) currentFrame.flip(true, false);
         if (currentFrame.isFlipX() && facingRight) currentFrame.flip(true, false);
-
         if (immunityTimer > 0 && ((int)(stateTime * 20) % 2 == 0)) batch.setColor(1, 0, 0, 0.5f);
         batch.draw(currentFrame, pos.x, pos.y);
         batch.setColor(1, 1, 1, 1);
@@ -56,16 +53,27 @@ public abstract class Entity {
     public void move(float x, float y, Array<Rectangle> collisions) {
         pos.x += x;
         hitbox.x = pos.x;
-        for (Rectangle wall : collisions) if (hitbox.overlaps(wall)) pos.x -= x;
+        for (Rectangle wall : collisions) {
+            if (hitbox.overlaps(wall)) {
+                pos.x -= x;
+                hitbox.x = pos.x; // INDISPENSABLE POUR ÉVITER LE SHAKE
+                break;
+            }
+        }
 
         pos.y += y;
         hitbox.y = pos.y;
-        for (Rectangle wall : collisions) if (hitbox.overlaps(wall)) pos.y -= y;
+        for (Rectangle wall : collisions) {
+            if (hitbox.overlaps(wall)) {
+                pos.y -= y;
+                hitbox.y = pos.y; // INDISPENSABLE POUR ÉVITER LE SHAKE
+                break;
+            }
+        }
 
         isMoving = x != 0 || y != 0;
         if (x > 0) facingRight = true;
         if (x < 0) facingRight = false;
-        hitbox.setPosition(pos.x, pos.y);
     }
 
     public void receiveDamage(int amount, Vector2 sourcePos) {
