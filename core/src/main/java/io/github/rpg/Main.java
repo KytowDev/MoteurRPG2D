@@ -19,7 +19,14 @@ public class Main extends Game {
     public void loadLevel(String mapPath) {
         Gdx.app.postRunnable(() -> {
             if (getScreen() != null) getScreen().dispose();
-            setScreen(new PlayScreen(this, mapPath));
+
+            if (mapPath.equals("GENERATE")) {
+                DungeonGenerator gen = new DungeonGenerator();
+                // Génère 3 salles normales entre le début et la fin
+                setScreen(new PlayScreen(this, gen.generate(5)));
+            } else {
+                setScreen(new PlayScreen(this, mapPath));
+            }
         });
     }
 

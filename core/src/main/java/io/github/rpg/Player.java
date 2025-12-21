@@ -17,8 +17,8 @@ public class Player extends Entity {
 
     private final Weapon weapon;
 
-    public Player(Vector2 spawn_pos, Texture idleSheet, Texture runSheet) {
-        super(spawn_pos, 100f, 100);
+    public Player(Vector2 spawn_pos, Texture idleSheet, Texture runSheet, float speed, int health) {
+        super(spawn_pos, speed, health);
         this.weapon = new Sword();
         int frameWidth = 16;
         int frameHeight = 28;
@@ -48,8 +48,8 @@ public class Player extends Entity {
     }
 
     private void handleInput(Array<Rectangle> collisions, Array<Entity> targets) {
-        isMoving = false;
         float dist = speed * Gdx.graphics.getDeltaTime();
+        isMoving = false;
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) move(0, dist, collisions);
         if (Gdx.input.isKeyPressed(Input.Keys.S)) move(0, -dist, collisions);

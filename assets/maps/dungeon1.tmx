@@ -107,12 +107,5 @@
 </data>
  </layer>
  <objectgroup id="5" name="collisions"/>
- <objectgroup id="6" name="entities">
-  <object id="17" name="spawn" x="319.333" y="239.333">
-   <properties>
-    <property name="type" value="player"/>
-   </properties>
-   <point/>
-  </object>
- </objectgroup>
+ <objectgroup id="6" name="entities"/>
 </map>

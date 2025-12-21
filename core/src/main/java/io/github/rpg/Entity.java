@@ -87,4 +87,6 @@ public abstract class Entity {
     public boolean isDead() { return health <= 0; }
     public Rectangle getBounds() { return hitbox; }
     public Vector2 getPosition() { return pos; }
+    // Ajoute ça à la fin de Entity.java avec les autres getters
+    public int getHealth() { return health; }
 }
