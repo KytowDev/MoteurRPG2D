@@ -3,6 +3,9 @@ package io.github.rpg;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.github.rpg.screens.PlayScreen;
+import io.github.rpg.utils.Assets;
+import io.github.rpg.utils.DungeonGenerator;
 
 public class Main extends Game {
 

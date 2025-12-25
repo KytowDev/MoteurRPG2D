@@ -1,4 +1,4 @@
-package io.github.rpg;
+package io.github.rpg.utils;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;

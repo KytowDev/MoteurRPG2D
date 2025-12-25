@@ -1,26 +1,25 @@
-package io.github.rpg;
+package io.github.rpg.model; // Si vous avez déplacé dans model, mettez: package io.github.rpg.model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public abstract class Entity {
 
+    // --- Données du Modèle (État) ---
     protected Vector2 pos;
     protected Rectangle hitbox;
     protected float speed;
     protected int health;
+    protected String type; // NOUVEAU : Définit l'apparence (ex: "player", "big_monster")
+
+    // --- États pour l'animation et la logique ---
     protected boolean facingRight = true;
-    protected float stateTime = 0;
-    protected Animation<TextureRegion> idleAnim;
-    protected Animation<TextureRegion> runAnim;
     protected boolean isMoving = false;
-    protected Vector2 knockback = new Vector2(0, 0);
+    protected float stateTime = 0;
     protected float immunityTimer = 0;
+    protected Vector2 knockback = new Vector2(0, 0);
 
     public Entity(Vector2 pos, float speed, int health) {
         this.pos = pos;
@@ -30,47 +29,50 @@ public abstract class Entity {
 
     public void update(float delta, Array<Rectangle> mapCollisions, Player player, Array<Entity> allEntities) {
         if (immunityTimer > 0) immunityTimer -= delta;
+
+        // Gestion du recul (Knockback)
         if (knockback.len() > 10f) {
             move(knockback.x * delta, knockback.y * delta, mapCollisions);
-            knockback.scl(0.90f);
+            knockback.scl(0.90f); // Amortissement
         }
+
+        // Logique spécifique (IA ou Input joueur)
         decideNextMove(delta, mapCollisions, player, allEntities);
+
+        // Mise à jour de la hitbox pour qu'elle suive la position visuelle
         hitbox.setPosition(pos.x, pos.y);
+
+        // Mise à jour du temps pour l'animation
+        stateTime += delta;
     }
 
+    // Méthode abstraite que Player et Monster doivent implémenter
     protected abstract void decideNextMove(float delta, Array<Rectangle> collisions, Player player, Array<Entity> allEntities);
 
-    public void render(Batch batch) {
-        stateTime += Gdx.graphics.getDeltaTime();
-        TextureRegion currentFrame = isMoving ? runAnim.getKeyFrame(stateTime, true) : idleAnim.getKeyFrame(stateTime, true);
-        if (!currentFrame.isFlipX() && !facingRight) currentFrame.flip(true, false);
-        if (currentFrame.isFlipX() && facingRight) currentFrame.flip(true, false);
-        if (immunityTimer > 0 && ((int)(stateTime * 20) % 2 == 0)) batch.setColor(1, 0, 0, 0.5f);
-        batch.draw(currentFrame, pos.x, pos.y);
-        batch.setColor(1, 1, 1, 1);
-    }
-
     public void move(float x, float y, Array<Rectangle> collisions) {
+        // Déplacement X
         pos.x += x;
         hitbox.x = pos.x;
         for (Rectangle wall : collisions) {
             if (hitbox.overlaps(wall)) {
                 pos.x -= x;
-                hitbox.x = pos.x; // INDISPENSABLE POUR ÉVITER LE SHAKE
+                hitbox.x = pos.x;
                 break;
             }
         }
 
+        // Déplacement Y
         pos.y += y;
         hitbox.y = pos.y;
         for (Rectangle wall : collisions) {
             if (hitbox.overlaps(wall)) {
                 pos.y -= y;
-                hitbox.y = pos.y; // INDISPENSABLE POUR ÉVITER LE SHAKE
+                hitbox.y = pos.y;
                 break;
             }
         }
 
+        // Mise à jour des états
         isMoving = x != 0 || y != 0;
         if (x > 0) facingRight = true;
         if (x < 0) facingRight = false;
@@ -79,14 +81,40 @@ public abstract class Entity {
     public void receiveDamage(int amount, Vector2 sourcePos) {
         if (immunityTimer > 0) return;
         health -= amount;
-        immunityTimer = 0.5f;
-        knockback.set(pos.cpy().sub(sourcePos).nor().scl(250f));
+        immunityTimer = 0.5f; // 0.5 seconde d'invulnérabilité
+
+        // Calcul du recul
+        if (sourcePos != null) {
+            knockback.set(pos.cpy().sub(sourcePos).nor().scl(250f));
+        }
     }
 
-    public float getSpeed() { return speed; }
-    public boolean isDead() { return health <= 0; }
-    public Rectangle getBounds() { return hitbox; }
+    // --- GETTERS (Indispensables pour la Vue et les Behaviors) ---
+
     public Vector2 getPosition() { return pos; }
-    // Ajoute ça à la fin de Entity.java avec les autres getters
+
+    public Rectangle getBounds() { return hitbox; }
+
+    public float getSpeed() { return speed; }
+
     public int getHealth() { return health; }
+
+    public boolean isDead() { return health <= 0; }
+
+    public String getType() { return type; }
+
+    public boolean isMoving() { return isMoving; }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
+
+    public float getStateTime() { return stateTime; }
+
+    public float getImmunityTimer() { return immunityTimer; }
+
 }

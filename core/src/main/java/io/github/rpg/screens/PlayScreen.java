@@ -1,22 +1,30 @@
-package io.github.rpg;
+package io.github.rpg.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.rpg.utils.Assets;
+import io.github.rpg.Main;
+import io.github.rpg.model.Entity;
+import io.github.rpg.model.Player;
+import io.github.rpg.model.Portal;
+import io.github.rpg.view.EntityRenderer; // Assurez-vous d'avoir créé ce package
+import io.github.rpg.factory.EntityFactory; // Assurez-vous d'avoir créé ce package
 
 public class PlayScreen implements Screen {
 
@@ -27,20 +35,19 @@ public class PlayScreen implements Screen {
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final OrthographicCamera uiCamera;
+
+    // Map & Rendu
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
+    private final EntityRenderer entityRenderer; // La nouvelle Vue
+
+    // Modèle (Données du jeu)
     private final Array<Entity> entities;
     private final Array<Rectangle> collisionRects;
     private final Array<Portal> portals;
     private Player player;
 
-    private final Texture playerIdleSheet;
-    private final Texture playerRunSheet;
-    private final Texture bigMonsterIdleSheet;
-    private final Texture bigMonsterRunSheet;
-    private final Texture dwarfIdleSheet;
-    private final Texture dwarfRunSheet;
-
+    // UI (Pour l'instant on garde les textures UI ici, ou on pourrait les mettre dans Assets)
     private final Texture heartFull;
     private final Texture heartHalf;
     private final Texture heartEmpty;
@@ -51,6 +58,8 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(Main game, TiledMap map) {
         this.game = game;
+
+        // Caméra et Viewport
         this.camera = new OrthographicCamera();
         this.viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         this.camera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
@@ -58,24 +67,24 @@ public class PlayScreen implements Screen {
         this.uiCamera = new OrthographicCamera();
         this.uiCamera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
 
+        // Map
         this.map = map;
         this.mapRenderer = new OrthogonalTiledMapRenderer(map, 1f);
 
-        this.playerIdleSheet = new Texture("anims/knight/knight_idle.png");
-        this.playerRunSheet = new Texture("anims/knight/knight_run.png");
-        this.bigMonsterIdleSheet = new Texture("anims/bigmonster/bigmonster_idle.png");
-        this.bigMonsterRunSheet = new Texture("anims/bigmonster/bigmonster_run.png");
-        this.dwarfIdleSheet = new Texture("anims/dwarf_m/dwarf_m_idle.png");
-        this.dwarfRunSheet = new Texture("anims/dwarf_m/dwarf_m_run.png");
+        // Initialisation du Renderer (La Vue)
+        this.entityRenderer = new EntityRenderer();
 
+        // UI Assets (Chargez-les ici ou via Assets.java si vous préférez)
         this.heartFull = new Texture("ui/heart_full.png");
         this.heartHalf = new Texture("ui/heart_half.png");
         this.heartEmpty = new Texture("ui/heart_empty.png");
 
-        this.entities = new Array<Entity>();
-        this.collisionRects = new Array<Rectangle>();
-        this.portals = new Array<Portal>();
+        // Listes du Modèle
+        this.entities = new Array<>();
+        this.collisionRects = new Array<>();
+        this.portals = new Array<>();
 
+        // Chargement du niveau
         loadWallTiles();
         loadDemiWallTiles();
         loadMapObjects();
@@ -88,6 +97,7 @@ public class PlayScreen implements Screen {
         return new TmxMapLoader().load(path, params);
     }
 
+    // --- Chargement des collisions (Murs) ---
     private void loadWallTiles() {
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walls");
         if (layer == null) return;
@@ -116,37 +126,39 @@ public class PlayScreen implements Screen {
         }
     }
 
+    // --- Chargement des Objets via la Factory ---
     private void loadMapObjects() {
         if (map.getLayers().get("entities") != null) {
-            for (MapObject object : map.getLayers().get("entities").getObjects()) processMapObject(object);
+            for (MapObject object : map.getLayers().get("entities").getObjects()) {
+                processMapObject(object);
+            }
         }
         if (map.getLayers().get("collisions") != null) {
-            for (MapObject object : map.getLayers().get("collisions").getObjects()) collisionRects.add(((RectangleMapObject) object).getRectangle());
+            for (MapObject object : map.getLayers().get("collisions").getObjects()) {
+                collisionRects.add(((RectangleMapObject) object).getRectangle());
+            }
         }
     }
 
-    // Dans processMapObject de PlayScreen.java
     private void processMapObject(MapObject object) {
-        float x = object.getProperties().get("x", Float.class);
-        float y = object.getProperties().get("y", Float.class);
         String type = object.getProperties().get("type", String.class);
 
-        switch (type) {
-            case "player":
-                setupPlayer(new Vector2(x, y));
-                break;
-            case "portal":
-                createPortal(object);
-                break;
-            case "big_monster":
-                // Comportement ChaseBehavior (attaque)
-                entities.add(new Monster(new Vector2(x, y), bigMonsterIdleSheet, bigMonsterRunSheet, 40f, new ChaseBehavior(), 32, 36, 4));
-                break;
-            case "dwarf_npc":
-                // Comportement StandStillBehavior (pacifique)
-                // Note : On utilise 'Monster' comme conteneur générique pour l'instant
-                entities.add(new Monster(new Vector2(x, y), dwarfIdleSheet, dwarfRunSheet, 0f, new StandStillBehavior(), 16, 28, 4));
-                break;
+        if ("portal".equals(type)) {
+            createPortal(object);
+            return;
+        }
+
+        // UTILISATION DE LA FACTORY ICI !
+        // Plus de switch géant, on délègue la création.
+        // On passe Assets.manager pour que la factory puisse vérifier les textures si besoin,
+        // ou simplement pour respecter la signature.
+        Entity entity = EntityFactory.create(object, Assets.manager);
+
+        if (entity != null) {
+            if (entity instanceof Player) {
+                this.player = (Player) entity;
+            }
+            entities.add(entity);
         }
     }
 
@@ -156,35 +168,92 @@ public class PlayScreen implements Screen {
         portals.add(new Portal(rect, dest));
     }
 
-    private void setupPlayer(Vector2 pos) {
-        this.player = new Player(pos, playerIdleSheet, playerRunSheet, 100f, 6);
-        this.entities.add(this.player);
-    }
-
+    // --- Boucle de jeu (Update & Render) ---
     @Override
     public void render(float delta) {
         update(delta);
+
+        // Effacer l'écran
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (player == null) return;
 
+        // 1. Rendu de la carte
         mapRenderer.setView(camera);
         mapRenderer.render();
 
+        // 2. Rendu des entités (MVC : On utilise EntityRenderer)
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        drawEntities();
-        if (!player.isDead()) player.render(game.batch, camera);
+
+        // On trie les entités par Y pour un effet de profondeur simple (Z-sorting)
+        // entities.sort((e1, e2) -> Float.compare(e2.getPosition().y, e1.getPosition().y));
+
+        for (Entity entity : entities) {
+            entityRenderer.render(entity, game.batch);
+        }
+
         game.batch.end();
 
+        // 3. Rendu de l'interface (HUD)
         game.batch.setProjectionMatrix(uiCamera.combined);
         game.batch.begin();
         renderHUD(game.batch);
         game.batch.end();
     }
 
-    private void renderHUD(com.badlogic.gdx.graphics.g2d.Batch batch) {
+    private void update(float delta) {
+        if (player.isDead()) {
+            game.loadLevel("maps/hub.tmx");
+            player = null;
+            return;
+        }
+
+        // --- AJOUT : Gestion de la visée (Mouse Follow) ---
+        // 1. On projette la souris dans le monde du jeu
+        Vector3 mousePos = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+        // 2. On calcule le centre du joueur
+        float playerCenterX = player.getPosition().x + player.getBounds().width / 2f;
+        float playerCenterY = player.getPosition().y + player.getBounds().height / 2f;
+
+        // 3. Calcul de l'angle (Atan2)
+        // Le -90f dépend de l'orientation de votre sprite d'épée original
+        float angle = MathUtils.atan2(mousePos.y - playerCenterY, mousePos.x - playerCenterX) * MathUtils.radiansToDegrees - 90f;
+
+        // 4. On met à jour le Modèle
+        player.setAimAngle(angle);
+        // --------------------------------------------------
+
+        updateEntities(delta);
+        checkPortals();
+
+        Vector3 target = new Vector3(player.getPosition().x, player.getPosition().y, 0);
+        camera.position.lerp(target, 0.1f);
+        camera.update();
+    }
+
+    private void updateEntities(float delta) {
+        // Boucle inversée pour suppression sûre
+        for (int i = entities.size - 1; i >= 0; i--) {
+            Entity entity = entities.get(i);
+            entity.update(delta, collisionRects, player, entities);
+            if (entity.isDead()) {
+                entities.removeIndex(i);
+            }
+        }
+    }
+
+    private void checkPortals() {
+        for (Portal portal : portals) {
+            if (player.getBounds().overlaps(portal.bounds)) {
+                game.loadLevel(portal.destination);
+            }
+        }
+    }
+
+    private void renderHUD(Batch batch) {
         int health = player.getHealth();
         int maxHearts = 3;
         int startX = 10;
@@ -196,47 +265,24 @@ public class PlayScreen implements Screen {
             if (health >= (i + 1) * 2) textureToDraw = heartFull;
             else if (health == (i * 2) + 1) textureToDraw = heartHalf;
             else textureToDraw = heartEmpty;
+
             batch.draw(textureToDraw, startX + (i * (heartFull.getWidth() + padding)), startY);
         }
     }
 
-    private void update(float delta) {
-        if (player.isDead()) {
-            game.loadLevel("maps/hub.tmx");
-            player = null;
-            return;
-        }
-        updateEntities(delta);
-        checkPortals();
-        Vector3 target = new Vector3(player.getPosition().x, player.getPosition().y, 0);
-        camera.position.lerp(target, 0.1f);
-        camera.update();
-    }
-
-    private void checkPortals() {
-        for (Portal portal : portals) if (player.getBounds().overlaps(portal.bounds)) game.loadLevel(portal.destination);
-    }
-
-    private void updateEntities(float delta) {
-        for (int i = entities.size - 1; i >= 0; i--) {
-            Entity entity = entities.get(i);
-            entity.update(delta, collisionRects, player, entities);
-            if (entity.isDead()) entities.removeIndex(i);
-        }
-    }
-
-    private void drawEntities() {
-        for (Entity entity : entities) entity.render(game.batch);
-    }
-
     @Override public void resize(int width, int height) { viewport.update(width, height); }
+
     @Override public void dispose() {
-        map.dispose(); mapRenderer.dispose();
-        playerIdleSheet.dispose(); playerRunSheet.dispose();
-        bigMonsterIdleSheet.dispose(); bigMonsterRunSheet.dispose();
-        dwarfIdleSheet.dispose(); dwarfRunSheet.dispose();
-        heartFull.dispose(); heartHalf.dispose(); heartEmpty.dispose();
+        map.dispose();
+        mapRenderer.dispose();
+
+        // On ne dispose plus les textures des entités ici car elles sont dans Assets !
+        // Seules les textures UI locales doivent être libérées
+        heartFull.dispose();
+        heartHalf.dispose();
+        heartEmpty.dispose();
     }
+
     @Override public void show() {}
     @Override public void pause() {}
     @Override public void resume() {}

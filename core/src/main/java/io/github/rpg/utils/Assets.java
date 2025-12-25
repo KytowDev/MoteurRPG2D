@@ -1,4 +1,4 @@
-package io.github.rpg;
+package io.github.rpg.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +14,7 @@ public class Assets {
         manager.load("anims/bigmonster/bigmonster_run.png", Texture.class);
         manager.load("anims/dwarf_m/dwarf_m_idle.png", Texture.class);
         manager.load("anims/dwarf_m/dwarf_m_run.png", Texture.class);
+        manager.load("swords/weapon_rusty_sword.png", Texture.class);
     }
 
     public static void dispose() {

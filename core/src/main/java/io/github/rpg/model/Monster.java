@@ -1,4 +1,4 @@
-package io.github.rpg;
+package io.github.rpg.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,19 +11,12 @@ public class Monster extends Entity {
 
     private final EnemyBehavior behavior;
 
-    public Monster(Vector2 pos, Texture idle, Texture run, float spd, EnemyBehavior behavior, int w, int h, int frames) {
+    public Monster(Vector2 pos, String type, float spd, EnemyBehavior behavior, int w, int h, int frames) {
         super(pos, spd, 50);
         this.behavior = behavior;
         this.hitbox = new Rectangle(pos.x, pos.y, w, h);
-        this.idleAnim = createAnim(idle, w, h, frames);
-        this.runAnim = createAnim(run, w, h, frames);
-    }
+        this.type = type;
 
-    private Animation<TextureRegion> createAnim(Texture t, int w, int h, int f) {
-        TextureRegion[][] tmp = TextureRegion.split(t, w, h);
-        TextureRegion[] frames = new TextureRegion[f];
-        for (int i = 0; i < f; i++) frames[i] = tmp[0][i];
-        return new Animation<>(0.1f, frames);
     }
 
     @Override

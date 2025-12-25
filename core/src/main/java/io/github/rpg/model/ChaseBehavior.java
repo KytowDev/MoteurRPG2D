@@ -1,4 +1,4 @@
-package io.github.rpg;
+package io.github.rpg.model;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;

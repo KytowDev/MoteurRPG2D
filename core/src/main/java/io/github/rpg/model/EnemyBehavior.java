@@ -1,4 +1,4 @@
-package io.github.rpg;
+package io.github.rpg.model;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Rectangle;
