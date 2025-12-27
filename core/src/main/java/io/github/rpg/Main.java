@@ -14,8 +14,14 @@ public class Main extends Game {
     @Override
     public void create() {
         this.batch = new SpriteBatch();
+
+        // 1. D'abord on lit le JSON
+        io.github.rpg.utils.DataManager.load();
+
+        // 2. Ensuite on charge les images listées dans le JSON
         Assets.load();
         Assets.manager.finishLoading();
+
         loadLevel("maps/hub.tmx");
     }
 
@@ -26,7 +32,7 @@ public class Main extends Game {
             if (mapPath.equals("GENERATE")) {
                 DungeonGenerator gen = new DungeonGenerator();
                 // Génère 3 salles normales entre le début et la fin
-                setScreen(new PlayScreen(this, gen.generate(5)));
+                setScreen(new PlayScreen(this, gen.generate(3)));
             } else {
                 setScreen(new PlayScreen(this, mapPath));
             }

@@ -76,81 +76,27 @@
  </layer>
  <objectgroup id="4" name="collisions"/>
  <objectgroup id="5" name="entities">
-  <object id="3" x="192.985" y="156.82">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
   <object id="4" x="47.5644" y="275.008">
    <properties>
     <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>
-  <object id="5" x="178.583" y="120.208">
+  <object id="6" x="215.256" y="281.82">
    <properties>
     <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>
-  <object id="6" x="206.256" y="269.82">
+  <object id="8" x="66.5096" y="81.6845">
    <properties>
     <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>
-  <object id="7" x="137.072" y="210.148">
+  <object id="10" x="248" y="87.5">
    <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="8" x="57.5096" y="69.1845">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="9" x="248" y="173">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="10" x="245.5" y="113">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="11" x="64" y="160">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="12" x="165" y="68.5">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="13" x="107.5" y="113.5">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="14" x="220.5" y="80">
-   <properties>
-    <property name="type" value="big_monster"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="15" x="152.5" y="249.5">
-   <properties>
-    <property name="type" value="big_monster"/>
+    <property name="type" value="big_demon"/>
    </properties>
    <point/>
   </object>

@@ -11,12 +11,11 @@ public class Monster extends Entity {
 
     private final EnemyBehavior behavior;
 
-    public Monster(Vector2 pos, String type, float spd, EnemyBehavior behavior, int w, int h, int frames) {
-        super(pos, spd, 50);
+    public Monster(Vector2 pos, String type, int health, float spd, EnemyBehavior behavior, int w, int h) {
+        super(pos, spd, health); // On passe la santé du JSON (ex: 50)
+        this.type = type;
         this.behavior = behavior;
         this.hitbox = new Rectangle(pos.x, pos.y, w, h);
-        this.type = type;
-
     }
 
     @Override

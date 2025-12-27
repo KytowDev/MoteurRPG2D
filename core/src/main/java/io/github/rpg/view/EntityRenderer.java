@@ -73,45 +73,42 @@ public class EntityRenderer {
             return animationCache.get(key);
         }
 
-        String path = getPathForType(type, isMoving);
-        if (!Assets.manager.isLoaded(path)) {
-            return null;
-        }
+        // 1. Récupération de la config pour connaitre la vraie taille du sprite
+        io.github.rpg.model.EntityConfig config = io.github.rpg.utils.DataManager.get(type);
+
+        // Si pas de config, on utilise des valeurs par défaut (ex: 16x16)
+        int frameWidth = (config != null) ? config.width : 16;
+        int frameHeight = (config != null) ? config.height : 16;
+
+        // 2. Récupération du chemin de l'image
+        String path = getPathForType(type, isMoving); // Votre méthode dynamique d'avant
+
+        if (!Assets.manager.isLoaded(path)) return null;
 
         Texture texture = Assets.manager.get(path, Texture.class);
-        int frameWidth = getFrameWidth(type);
-        int frameHeight = texture.getHeight();
 
+        // 3. Découpage avec les dimensions du JSON !
+        // C'est ici que le bug se produisait (ça utilisait getFrameWidth() qui renvoyait 16)
         TextureRegion[][] tmp = TextureRegion.split(texture, frameWidth, frameHeight);
 
-        float frameDuration = (type.equals("player") && isMoving) ? 0.08f : 0.1f;
+        // On prend la première ligne de l'image (tmp[0]) comme animation
+        float frameDuration = 0.1f;
         Animation<TextureRegion> anim = new Animation<>(frameDuration, tmp[0]);
 
         animationCache.put(key, anim);
         return anim;
     }
 
-    private int getFrameWidth(String type) {
-        switch (type) {
-            case "player": return 16;
-            case "dwarf_npc": return 16;
-            case "big_monster": return 32;
-            default: return 16;
-        }
-    }
-
     private String getPathForType(String type, boolean isMoving) {
-        String suffix = isMoving ? "_run.png" : "_idle.png";
+        io.github.rpg.model.EntityConfig config = io.github.rpg.utils.DataManager.get(type);
 
-        switch (type) {
-            case "player":
-                return "anims/knight/knight" + suffix;
-            case "big_monster":
-                return "anims/bigmonster/bigmonster" + suffix;
-            case "dwarf_npc":
-                return "anims/dwarf_m/dwarf_m" + suffix;
-            default:
-                return "anims/knight/knight_idle.png";
-        }
+        // Fallback joueur si config introuvable
+        if (config == null) return "anims/knight/idle.png";
+
+        String path = config.texturePath;
+        if (!path.endsWith("/")) path += "/";
+
+        // Nouvelle convention simple :
+        return path + (isMoving ? "run.png" : "idle.png");
     }
 }

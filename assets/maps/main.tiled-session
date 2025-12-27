@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "dungeon1.tmx",
+    "activeFile": "prefabs/room_normal.tmx",
     "expandedProjectPaths": [
-        ".",
-        "prefabs"
+        "prefabs",
+        "."
     ],
     "fileStates": {
         "atlas_floor-16x16.tsx": {
@@ -26,8 +26,8 @@
             "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 320,
-                "y": 239.5
+                "x": 319.5,
+                "y": 239
             }
         },
         "extruded_low_walls.tsx": {
@@ -40,10 +40,10 @@
                 5
             ],
             "scale": 2,
-            "selectedLayer": 5,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 316.5,
-                "y": 284.25
+                "x": 316.25,
+                "y": 284
             }
         },
         "main.tmx": {
@@ -58,16 +58,16 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 95,
-                "y": 51.16666666666666
+                "x": 94.83333333333331,
+                "y": 51
             }
         },
         "prefabs/empty_base.tmx": {
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1604.5,
-                "y": 814.75
+                "x": 1604.75,
+                "y": 815
             }
         },
         "prefabs/room_end.tmx": {
@@ -77,8 +77,8 @@
             "scale": 2.31265625,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 159.98918991960002,
-                "y": 160.2053915275995
+                "x": 159.77298831160059,
+                "y": 159.98918991960002
             }
         },
         "prefabs/room_normal.tmx": {
@@ -88,8 +88,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 220,
-                "y": 170.75
+                "x": 219.75,
+                "y": 170.5
             }
         },
         "prefabs/room_start.tmx": {
@@ -102,8 +102,8 @@
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 152,
-                "y": 164.75
+                "x": 151.75,
+                "y": 164.5
             }
         },
         "test.tmx": {
@@ -136,12 +136,12 @@
     "project": "main.tiled-project",
     "recentFiles": [
         "hub.tmx",
+        "dungeon1.tmx",
+        "prefabs/room_start.tmx",
         "prefabs/corridor_h.tmx",
         "prefabs/empty_base.tmx",
         "prefabs/room_end.tmx",
         "prefabs/room_normal.tmx",
-        "prefabs/room_start.tmx",
-        "dungeon1.tmx",
         "extruded_low_walls.tsx",
         "test.tmx",
         "main.tmx"

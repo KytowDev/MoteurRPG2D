@@ -13,15 +13,10 @@ public class Player extends Entity {
     private final Weapon weapon;
     private float aimAngle = 0f; // NOUVEAU
     // Constructeur simplifié : plus de textures ici !
-    public Player(Vector2 spawn_pos, int health) {
-        // On passe "player" comme type pour que le Renderer sache quelle image charger
-        super(spawn_pos, 100f, health); // 100f = vitesse
+    public Player(Vector2 spawn_pos, int health, float speed) {
+        super(spawn_pos, speed, health); // On passe la vitesse du JSON (ex: 100)
         this.type = "player";
-
-        // Initialisation de l'arme (Modèle uniquement)
         this.weapon = new Sword();
-
-        // Hitbox (taille adaptée au sprite du chevalier)
         this.hitbox = new Rectangle(spawn_pos.x, spawn_pos.y, 14, 20);
     }
 

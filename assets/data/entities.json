@@ -1,0 +1,35 @@
+{
+  "player": {
+    "health": 6,
+    "speed": 100,
+    "width": 16,
+    "height": 28,
+    "texture": "anims/knight/"
+  },
+  "big_monster": {
+    "health": 50,
+    "speed": 40,
+    "damage": 1,
+    "width": 32,
+    "height": 36,
+    "texture": "anims/bigmonster/",
+    "behavior": "chase"
+  },
+  "big_demon": {
+    "health": 50,
+    "speed": 40,
+    "damage": 1,
+    "width": 32,
+    "height": 36,
+    "texture": "anims/big_demon/",
+    "behavior": "chase"
+  },
+  "dwarf_npc": {
+    "health": 100,
+    "speed": 0,
+    "width": 16,
+    "height": 28,
+    "texture": "anims/dwarf_m/",
+    "behavior": "stand_still"
+  }
+}
