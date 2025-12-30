@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "prefabs/room_normal.tmx",
+    "activeFile": "prefabs/room_2.tmx",
     "expandedProjectPaths": [
-        "prefabs",
-        "."
+        ".",
+        "prefabs"
     ],
     "fileStates": {
         "atlas_floor-16x16.tsx": {
@@ -20,8 +20,8 @@
         },
         "dungeon1.tmx": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 1,
             "selectedLayer": 4,
@@ -40,7 +40,7 @@
                 5
             ],
             "scale": 2,
-            "selectedLayer": 6,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 316.25,
                 "y": 284
@@ -56,18 +56,48 @@
         },
         "prefabs/corridor_h.tmx": {
             "scale": 3,
-            "selectedLayer": 0,
+            "selectedLayer": 4,
             "viewCenter": {
                 "x": 94.83333333333331,
                 "y": 51
             }
         },
         "prefabs/empty_base.tmx": {
-            "scale": 2,
+            "scale": 0.125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1604.75,
-                "y": 815
+                "x": 3300,
+                "y": 1104
+            }
+        },
+        "prefabs/empty_base_bigger.tmx": {
+            "scale": 0.3056640625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 39999.795527156544,
+                "y": 1400.2300319488818
+            }
+        },
+        "prefabs/room_1.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 3.716875,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 159.94619135698673,
+                "y": 160.08071296451993
+            }
+        },
+        "prefabs/room_2.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 205.16666666666666,
+                "y": 206.66666666666663
             }
         },
         "prefabs/room_end.tmx": {
@@ -119,32 +149,35 @@
         }
     },
     "last.imagePath": "C:/Users/kytog/Desktop/MoteurRPG2D/assets/maps",
-    "map.height": 6,
+    "map.height": 100,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 12,
+    "map.width": 5000,
     "openFiles": [
         "hub.tmx",
-        "dungeon1.tmx",
         "prefabs/room_start.tmx",
         "prefabs/room_normal.tmx",
         "prefabs/room_end.tmx",
+        "prefabs/corridor_h.tmx",
         "prefabs/empty_base.tmx",
-        "prefabs/corridor_h.tmx"
+        "prefabs/room_2.tmx",
+        "prefabs/room_1.tmx"
     ],
     "project": "main.tiled-project",
     "recentFiles": [
         "hub.tmx",
-        "dungeon1.tmx",
         "prefabs/room_start.tmx",
+        "prefabs/room_normal.tmx",
+        "prefabs/room_end.tmx",
         "prefabs/corridor_h.tmx",
         "prefabs/empty_base.tmx",
-        "prefabs/room_end.tmx",
-        "prefabs/room_normal.tmx",
+        "prefabs/room_1.tmx",
+        "prefabs/room_2.tmx",
+        "dungeon1.tmx",
+        "prefabs/empty_base_bigger.tmx",
         "extruded_low_walls.tsx",
-        "test.tmx",
-        "main.tmx"
+        "test.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 1,

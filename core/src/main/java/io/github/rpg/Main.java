@@ -30,10 +30,18 @@ public class Main extends Game {
             if (getScreen() != null) getScreen().dispose();
 
             if (mapPath.equals("GENERATE")) {
+                // AJOUT : On monte d'un niveau à chaque nouvelle génération !
+                io.github.rpg.model.GameState.level++;
+
                 DungeonGenerator gen = new DungeonGenerator();
-                // Génère 3 salles normales entre le début et la fin
-                setScreen(new PlayScreen(this, gen.generate(3)));
+                // On peut aussi augmenter la taille du donjon : 3 salles + niveau actuel
+                int rooms = 4; //+ io.github.rpg.model.GameState.level;
+                setScreen(new PlayScreen(this, gen.generate(rooms)));
             } else {
+                // Si on charge le HUB (ou qu'on meurt), on peut reset ou non selon votre envie
+                if (mapPath.contains("hub")) {
+                   io.github.rpg.model.GameState.reset();
+                }
                 setScreen(new PlayScreen(this, mapPath));
             }
         });

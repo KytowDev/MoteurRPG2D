@@ -9,7 +9,7 @@ public class Sword implements Weapon {
     // Constantes de gameplay (Facile à modifier ici)
     private final float ATTACK_SPEED = 0.4f;        // Temps total de l'attaque (cooldown)
     private final float ATTACK_ANIM_DURATION = 0.2f;// Temps de l'animation visible
-    private final int DAMAGE = 25;
+    private final int DAMAGE = 10;
     private final float RANGE = 15f;
     private final float HITBOX_HEIGHT = 28f;
 

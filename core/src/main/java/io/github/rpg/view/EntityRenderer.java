@@ -37,10 +37,6 @@ public class EntityRenderer {
             currentFrame.flip(true, false);
         }
 
-        // 4. Effet de dégâts (Clignotement rouge)
-        // CORRECTION DU BUG ICI :
-        // On ne stocke pas l'objet Color, mais on retient qu'il faut remettre à BLANC à la fin.
-        // (Ou on sauvegarde les composantes r,g,b,a si vous utilisez des teintes globales)
         boolean isColored = false;
 
         if (entity.getImmunityTimer() > 0) {

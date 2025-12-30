@@ -7,7 +7,7 @@
     "texture": "anims/knight/"
   },
   "big_monster": {
-    "health": 50,
+    "health": 30,
     "speed": 40,
     "damage": 1,
     "width": 32,
@@ -16,7 +16,7 @@
     "behavior": "chase"
   },
   "big_demon": {
-    "health": 50,
+    "health": 40,
     "speed": 40,
     "damage": 1,
     "width": 32,

@@ -8,23 +8,52 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import java.util.Iterator;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DungeonGenerator {
 
     private final TmxMapLoader loader = new TmxMapLoader();
-    private int currentX = 0;
+    private int currentX = 20; //marge pour ne pas voir de bord noir à gauche
 
     public TiledMap generate(int roomCount) {
         TiledMap masterMap = loader.load("maps/prefabs/empty_base.tmx");
 
+        // --- 1. DÉTECTION AUTOMATIQUE DES SALLES ---
+        List<String> availableRooms = new ArrayList<>();
+        int index = 1;
+
+        // On cherche "room_1.tmx", puis "room_2.tmx", etc.
+        while (Gdx.files.internal("maps/prefabs/room_" + index + ".tmx").exists()) {
+            availableRooms.add("maps/prefabs/room_" + index + ".tmx");
+            System.out.println("Salle détectée : room_" + index);
+            index++;
+        }
+
+        // SÉCURITÉ : Si on n'a trouvé aucune "room_X", on remet "room_normal" par défaut
+        // pour éviter que le jeu plante si tu n'as pas encore renommés tes fichiers.
+        if (availableRooms.isEmpty()) {
+            availableRooms.add("maps/prefabs/room_normal.tmx");
+        }
+        // -------------------------------------------
+
+        // Début du donjon
         pasteChunk(masterMap, "maps/prefabs/room_start.tmx", 0);
         pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 7);
 
+        // Génération des salles aléatoires
         for (int i = 0; i < roomCount; i++) {
-            pasteChunk(masterMap, "maps/prefabs/room_normal.tmx", 0);
+            // --- 2. CHOIX ALÉATOIRE ---
+            // On prend un index au hasard dans la liste (de 0 à size-1)
+            String randomRoomPath = availableRooms.get(MathUtils.random(availableRooms.size() - 1));
+
+            pasteChunk(masterMap, randomRoomPath, 0);
             pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 7);
         }
 
+        // Fin du donjon
         pasteChunk(masterMap, "maps/prefabs/room_end.tmx", 0);
 
         return masterMap;

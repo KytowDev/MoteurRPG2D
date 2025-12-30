@@ -30,8 +30,9 @@ public class EntityFactory {
         return new Monster(
             pos,
             type,           // Pour que le Renderer sache quelle texture charger
-            config.health,
+            (int) (config.health + (io.github.rpg.model.GameState.level * 5)),
             config.speed,
+            config.damage,
             behavior,
             config.width,
             config.height

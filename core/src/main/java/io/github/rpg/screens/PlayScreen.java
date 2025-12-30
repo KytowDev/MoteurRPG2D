@@ -2,10 +2,12 @@ package io.github.rpg.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,11 +15,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.rpg.controller.PlayerController;
+import io.github.rpg.model.Monster;
 import io.github.rpg.utils.Assets;
 import io.github.rpg.Main;
 import io.github.rpg.model.Entity;
@@ -40,12 +45,17 @@ public class PlayScreen implements Screen {
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final EntityRenderer entityRenderer; // La nouvelle Vue
+    private PlayerController controller;
+    private final com.badlogic.gdx.graphics.g2d.BitmapFont font;
+
 
     // Modèle (Données du jeu)
     private final Array<Entity> entities;
     private final Array<Rectangle> collisionRects;
     private final Array<Portal> portals;
     private Player player;
+
+    private com.badlogic.gdx.audio.Music music;
 
     // UI (Pour l'instant on garde les textures UI ici, ou on pourrait les mettre dans Assets)
     private final Texture heartFull;
@@ -54,10 +64,17 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(Main game, String mapPath) {
         this(game, loadMap(mapPath));
+        if (Assets.manager.isLoaded("music/theme.mp3")) {
+            music = Assets.manager.get("music/theme.mp3", com.badlogic.gdx.audio.Music.class);
+            music.setLooping(true);
+            music.setVolume(0.3f);
+            music.play();
+        }
     }
 
     public PlayScreen(Main game, TiledMap map) {
         this.game = game;
+        this.font = new com.badlogic.gdx.graphics.g2d.BitmapFont();
 
         // Caméra et Viewport
         this.camera = new OrthographicCamera();
@@ -153,10 +170,11 @@ public class PlayScreen implements Screen {
         // On passe Assets.manager pour que la factory puisse vérifier les textures si besoin,
         // ou simplement pour respecter la signature.
         Entity entity = EntityFactory.create(object, Assets.manager);
-
         if (entity != null) {
             if (entity instanceof Player) {
                 this.player = (Player) entity;
+                // 2. Création du controller dès qu'on a le joueur
+                this.controller = new PlayerController(this.player);
             }
             entities.add(entity);
         }
@@ -201,6 +219,11 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         renderHUD(game.batch);
         game.batch.end();
+
+        game.batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        game.batch.begin();
+        renderTextHUD(game.batch);
+        game.batch.end();
     }
 
     private void update(float delta) {
@@ -208,6 +231,10 @@ public class PlayScreen implements Screen {
             game.loadLevel("maps/hub.tmx");
             player = null;
             return;
+        }
+
+        if (controller != null) {
+            controller.update(delta, collisionRects, entities);
         }
 
         // --- AJOUT : Gestion de la visée (Mouse Follow) ---
@@ -239,12 +266,39 @@ public class PlayScreen implements Screen {
         for (int i = entities.size - 1; i >= 0; i--) {
             Entity entity = entities.get(i);
             entity.update(delta, collisionRects, player, entities);
+
             if (entity.isDead()) {
+                if (entity instanceof Monster) {
+                    // Gain de pièces (ex: 1 pièce par niveau du monstre, ou fixe)
+                    io.github.rpg.model.GameState.coins += 1;
+                }
                 entities.removeIndex(i);
             }
         }
     }
 
+    private void renderTextHUD(Batch batch) {
+        // 1. Préparation du texte
+        String text = "NIVEAU : " + io.github.rpg.model.GameState.level + "\n" +
+            "BEST : " + io.github.rpg.model.GameState.bestLevel + "\n" +
+            "PIÈCES : " + io.github.rpg.model.GameState.coins + " $";
+
+        // 2. Configuration de la police (On la veut blanche et lisible)
+        font.setColor(Color.WHITE);
+        font.getData().setScale(1.5f); // Tu peux ajuster la taille ici (1.0f = taille native)
+
+        // 3. Calcul de la position (Ancrage Haut-Droite)
+        GlyphLayout layout = new GlyphLayout(font, text);
+
+        float screenW = Gdx.graphics.getWidth();
+        float screenH = Gdx.graphics.getHeight();
+
+        float x = screenW - layout.width - 20; // 20px de marge à droite
+        float y = screenH - 20;                // 20px de marge en haut
+
+        // 4. Dessin
+        font.draw(batch, text, x, y);
+    }
     private void checkPortals() {
         for (Portal portal : portals) {
             if (player.getBounds().overlaps(portal.bounds)) {
@@ -281,6 +335,8 @@ public class PlayScreen implements Screen {
         heartFull.dispose();
         heartHalf.dispose();
         heartEmpty.dispose();
+        font.dispose();
+
     }
 
     @Override public void show() {}

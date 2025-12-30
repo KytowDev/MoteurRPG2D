@@ -82,21 +82,21 @@
    </properties>
    <point/>
   </object>
-  <object id="6" x="215.256" y="281.82">
+  <object id="6" x="265.756" y="280.32">
    <properties>
     <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>
-  <object id="8" x="66.5096" y="81.6845">
+  <object id="8" x="66.0096" y="69.6845">
    <properties>
     <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>
-  <object id="10" x="248" y="87.5">
+  <object id="10" x="263" y="71.5">
    <properties>
-    <property name="type" value="big_demon"/>
+    <property name="type" value="big_monster"/>
    </properties>
    <point/>
   </object>

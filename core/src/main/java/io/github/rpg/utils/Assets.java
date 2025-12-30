@@ -3,7 +3,8 @@ package io.github.rpg.utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import io.github.rpg.model.EntityConfig;
-import io.github.rpg.utils.DataManager;
+import com.badlogic.gdx.audio.Music; // Import Music
+import com.badlogic.gdx.audio.Sound; // Import Sound
 
 public class Assets {
 
@@ -15,6 +16,8 @@ public class Assets {
         manager.load("ui/heart_half.png", Texture.class);
         manager.load("ui/heart_empty.png", Texture.class);
         manager.load("swords/weapon_rusty_sword.png", Texture.class);
+        manager.load("music/theme.mp3", Music.class);
+
 
         // Chargement DYNAMIQUE (Nouvelle convention)
         for (EntityConfig config : DataManager.getAllConfigs()) {
@@ -28,6 +31,11 @@ public class Assets {
                 manager.load(path + "idle.png", Texture.class);
                 manager.load(path + "run.png", Texture.class);
             }
+        }
+    }
+    public static void playSound(String name) {
+        if (manager.isLoaded(name, Sound.class)) {
+            manager.get(name, Sound.class).play(0.5f); // 0.5f = 50% volume
         }
     }
 

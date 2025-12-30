@@ -9,8 +9,7 @@ public class ChaseBehavior implements EnemyBehavior {
     @Override
     public void act(Monster monster, Player player, Array<Rectangle> collisions, float delta) {
         if (monster.getBounds().overlaps(player.getBounds())) {
-            // CORRECTION ICI : 1 dégât au lieu de 10
-            player.receiveDamage(1, monster.getPosition());
+            player.receiveDamage(monster.getDamage(), monster.getPosition());
         }
 
         float distance = monster.getPosition().dst(player.getPosition());

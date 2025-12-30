@@ -1,8 +1,5 @@
 package io.github.rpg.model;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -10,12 +7,18 @@ import com.badlogic.gdx.utils.Array;
 public class Monster extends Entity {
 
     private final EnemyBehavior behavior;
+    private int damage;
 
-    public Monster(Vector2 pos, String type, int health, float spd, EnemyBehavior behavior, int w, int h) {
+    public Monster(Vector2 pos, String type, int health, float spd, int damage, EnemyBehavior behavior, int w, int h) {
         super(pos, spd, health); // On passe la santé du JSON (ex: 50)
+        this.damage = damage;
         this.type = type;
         this.behavior = behavior;
         this.hitbox = new Rectangle(pos.x, pos.y, w, h);
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     @Override

@@ -113,6 +113,10 @@ public abstract class Entity {
         this.facingRight = facingRight;
     }
 
+    public void setMoving(boolean isMoving) {
+        this.isMoving = isMoving;
+    }
+
     public float getStateTime() { return stateTime; }
 
     public float getImmunityTimer() { return immunityTimer; }
