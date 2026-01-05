@@ -3,6 +3,7 @@ package io.github.rpg;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.github.rpg.model.GameState;
 import io.github.rpg.screens.PlayScreen;
 import io.github.rpg.utils.Assets;
 import io.github.rpg.utils.DungeonGenerator;
@@ -15,10 +16,8 @@ public class Main extends Game {
     public void create() {
         this.batch = new SpriteBatch();
 
-        // 1. D'abord on lit le JSON
         io.github.rpg.utils.DataManager.load();
 
-        // 2. Ensuite on charge les images listées dans le JSON
         Assets.load();
         Assets.manager.finishLoading();
 
@@ -30,8 +29,7 @@ public class Main extends Game {
             if (getScreen() != null) getScreen().dispose();
 
             if (mapPath.equals("GENERATE")) {
-                // AJOUT : On monte d'un niveau à chaque nouvelle génération !
-                io.github.rpg.model.GameState.level++;
+                GameState.getInstance().incrementLevel();
 
                 DungeonGenerator gen = new DungeonGenerator();
                 // On peut aussi augmenter la taille du donjon : 3 salles + niveau actuel
@@ -40,7 +38,7 @@ public class Main extends Game {
             } else {
                 // Si on charge le HUB (ou qu'on meurt), on peut reset ou non selon votre envie
                 if (mapPath.contains("hub")) {
-                   io.github.rpg.model.GameState.reset();
+                    GameState.getInstance().reset();
                 }
                 setScreen(new PlayScreen(this, mapPath));
             }

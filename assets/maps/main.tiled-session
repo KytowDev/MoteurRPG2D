@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "prefabs/room_2.tmx",
+    "activeFile": "prefabs/empty_base.tmx",
     "expandedProjectPaths": [
-        ".",
-        "prefabs"
+        "prefabs",
+        "."
     ],
     "fileStates": {
         "atlas_floor-16x16.tsx": {
@@ -36,8 +36,8 @@
         },
         "hub.tmx": {
             "expandedObjectLayers": [
-                6,
-                5
+                5,
+                6
             ],
             "scale": 2,
             "selectedLayer": 0,
@@ -63,11 +63,11 @@
             }
         },
         "prefabs/empty_base.tmx": {
-            "scale": 0.125,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 3300,
-                "y": 1104
+                "x": 1730.3333333333333,
+                "y": 932.6666666666665
             }
         },
         "prefabs/empty_base_bigger.tmx": {
@@ -157,7 +157,6 @@
     "openFiles": [
         "hub.tmx",
         "prefabs/room_start.tmx",
-        "prefabs/room_normal.tmx",
         "prefabs/room_end.tmx",
         "prefabs/corridor_h.tmx",
         "prefabs/empty_base.tmx",
@@ -168,12 +167,12 @@
     "recentFiles": [
         "hub.tmx",
         "prefabs/room_start.tmx",
-        "prefabs/room_normal.tmx",
         "prefabs/room_end.tmx",
         "prefabs/corridor_h.tmx",
-        "prefabs/empty_base.tmx",
         "prefabs/room_1.tmx",
         "prefabs/room_2.tmx",
+        "prefabs/empty_base.tmx",
+        "prefabs/room_normal.tmx",
         "dungeon1.tmx",
         "prefabs/empty_base_bigger.tmx",
         "extruded_low_walls.tsx",

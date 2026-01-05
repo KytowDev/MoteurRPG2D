@@ -19,7 +19,6 @@ public class Assets {
         manager.load("music/theme.mp3", Music.class);
 
 
-        // Chargement DYNAMIQUE (Nouvelle convention)
         for (EntityConfig config : DataManager.getAllConfigs()) {
             if (config.texturePath != null && !config.texturePath.isEmpty()) {
                 String path = config.texturePath;

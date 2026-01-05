@@ -10,11 +10,12 @@ public class Monster extends Entity {
     private int damage;
 
     public Monster(Vector2 pos, String type, int health, float spd, int damage, EnemyBehavior behavior, int w, int h) {
-        super(pos, spd, health); // On passe la santé du JSON (ex: 50)
+        // On passe TOUT au parent. C'est beaucoup plus propre.
+        super(pos, spd, health, type, w, h);
+
         this.damage = damage;
-        this.type = type;
         this.behavior = behavior;
-        this.hitbox = new Rectangle(pos.x, pos.y, w, h);
+        // Plus besoin de "this.type = ..." ni "this.hitbox = ..."
     }
 
     public int getDamage() {
@@ -23,6 +24,8 @@ public class Monster extends Entity {
 
     @Override
     protected void decideNextMove(float delta, Array<Rectangle> collisions, Player player, Array<Entity> allEntities) {
-        if (knockback.len() < 10f) behavior.act(this, player, collisions, delta);
+        if (getKnockback().len() < 10f) {
+            behavior.act(this, player, collisions, delta);
+        }
     }
 }

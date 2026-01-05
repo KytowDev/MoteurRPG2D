@@ -22,14 +22,11 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.rpg.controller.PlayerController;
-import io.github.rpg.model.Monster;
+import io.github.rpg.model.*;
 import io.github.rpg.utils.Assets;
 import io.github.rpg.Main;
-import io.github.rpg.model.Entity;
-import io.github.rpg.model.Player;
-import io.github.rpg.model.Portal;
-import io.github.rpg.view.EntityRenderer; // Assurez-vous d'avoir créé ce package
-import io.github.rpg.factory.EntityFactory; // Assurez-vous d'avoir créé ce package
+import io.github.rpg.view.EntityRenderer;
+import io.github.rpg.factory.EntityFactory;
 
 public class PlayScreen implements Screen {
 
@@ -165,15 +162,14 @@ public class PlayScreen implements Screen {
             return;
         }
 
-        // UTILISATION DE LA FACTORY ICI !
-        // Plus de switch géant, on délègue la création.
-        // On passe Assets.manager pour que la factory puisse vérifier les textures si besoin,
-        // ou simplement pour respecter la signature.
         Entity entity = EntityFactory.create(object, Assets.manager);
         if (entity != null) {
             if (entity instanceof Player) {
                 this.player = (Player) entity;
                 // 2. Création du controller dès qu'on a le joueur
+                if (GameState.getInstance().getCurrentHealth() > 0) {
+                    player.setHealth(GameState.getInstance().getCurrentHealth());
+                }
                 this.controller = new PlayerController(this.player);
             }
             entities.add(entity);
@@ -186,7 +182,6 @@ public class PlayScreen implements Screen {
         portals.add(new Portal(rect, dest));
     }
 
-    // --- Boucle de jeu (Update & Render) ---
     @Override
     public void render(float delta) {
         update(delta);
@@ -256,6 +251,7 @@ public class PlayScreen implements Screen {
         updateEntities(delta);
         checkPortals();
 
+        GameState.getInstance().setCurrentHealth(player.getHealth());
         Vector3 target = new Vector3(player.getPosition().x, player.getPosition().y, 0);
         camera.position.lerp(target, 0.1f);
         camera.update();
@@ -269,8 +265,7 @@ public class PlayScreen implements Screen {
 
             if (entity.isDead()) {
                 if (entity instanceof Monster) {
-                    // Gain de pièces (ex: 1 pièce par niveau du monstre, ou fixe)
-                    io.github.rpg.model.GameState.coins += 1;
+                    GameState.getInstance().addCoin();
                 }
                 entities.removeIndex(i);
             }
@@ -279,9 +274,9 @@ public class PlayScreen implements Screen {
 
     private void renderTextHUD(Batch batch) {
         // 1. Préparation du texte
-        String text = "NIVEAU : " + io.github.rpg.model.GameState.level + "\n" +
-            "BEST : " + io.github.rpg.model.GameState.bestLevel + "\n" +
-            "PIÈCES : " + io.github.rpg.model.GameState.coins + " $";
+        String text = "NIVEAU : " + GameState.getInstance().getLevel() + "\n" +
+            "BEST : " + GameState.getInstance().getBestLevel() + "\n" +
+            "PIÈCES : " + GameState.getInstance().getCoins() + " $";
 
         // 2. Configuration de la police (On la veut blanche et lisible)
         font.setColor(Color.WHITE);
@@ -301,8 +296,8 @@ public class PlayScreen implements Screen {
     }
     private void checkPortals() {
         for (Portal portal : portals) {
-            if (player.getBounds().overlaps(portal.bounds)) {
-                game.loadLevel(portal.destination);
+            if (player.getBounds().overlaps(portal.getBounds())) {
+                game.loadLevel(portal.getDestination());
             }
         }
     }
@@ -329,14 +324,10 @@ public class PlayScreen implements Screen {
     @Override public void dispose() {
         map.dispose();
         mapRenderer.dispose();
-
-        // On ne dispose plus les textures des entités ici car elles sont dans Assets !
-        // Seules les textures UI locales doivent être libérées
         heartFull.dispose();
         heartHalf.dispose();
         heartEmpty.dispose();
         font.dispose();
-
     }
 
     @Override public void show() {}

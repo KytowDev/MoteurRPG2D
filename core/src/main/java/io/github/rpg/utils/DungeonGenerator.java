@@ -32,29 +32,17 @@ public class DungeonGenerator {
             index++;
         }
 
-        // SÉCURITÉ : Si on n'a trouvé aucune "room_X", on remet "room_normal" par défaut
-        // pour éviter que le jeu plante si tu n'as pas encore renommés tes fichiers.
-        if (availableRooms.isEmpty()) {
-            availableRooms.add("maps/prefabs/room_normal.tmx");
-        }
-        // -------------------------------------------
+        pasteChunk(masterMap, "maps/prefabs/room_start.tmx", 20);
+        pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 27);
 
-        // Début du donjon
-        pasteChunk(masterMap, "maps/prefabs/room_start.tmx", 0);
-        pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 7);
-
-        // Génération des salles aléatoires
+        // génération des salles aléatoires
         for (int i = 0; i < roomCount; i++) {
-            // --- 2. CHOIX ALÉATOIRE ---
-            // On prend un index au hasard dans la liste (de 0 à size-1)
             String randomRoomPath = availableRooms.get(MathUtils.random(availableRooms.size() - 1));
-
-            pasteChunk(masterMap, randomRoomPath, 0);
-            pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 7);
+            pasteChunk(masterMap, randomRoomPath, 20);
+            pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 27);
         }
 
-        // Fin du donjon
-        pasteChunk(masterMap, "maps/prefabs/room_end.tmx", 0);
+        pasteChunk(masterMap, "maps/prefabs/room_end.tmx", 20);
 
         return masterMap;
     }

@@ -33,7 +33,7 @@ public class EntityRenderer {
 
         // 3. Gestion de l'orientation (Flip)
         boolean facingRight = entity.isFacingRight();
-        if (currentFrame.isFlipX() != !facingRight) {
+        if (currentFrame.isFlipX() == facingRight) {
             currentFrame.flip(true, false);
         }
 

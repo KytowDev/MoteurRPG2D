@@ -14,23 +14,19 @@ public class EntityFactory {
         float y = object.getProperties().get("y", Float.class);
         Vector2 pos = new Vector2(x, y);
 
-        // 1. On charge la config depuis le JSON
         EntityConfig config = DataManager.get(type);
         if (config == null) return null;
 
-        // Cas particulier du Joueur (classe spécifique)
         if ("player".equals(type)) {
             return new Player(pos, config.health, config.speed);
         }
 
-        // 2. On détermine le comportement grâce au SWITCH ici
         EnemyBehavior behavior = getBehavior(config.behavior);
 
-        // 3. On crée le monstre générique avec toutes les infos du JSON
         return new Monster(
             pos,
-            type,           // Pour que le Renderer sache quelle texture charger
-            (int) (config.health + (io.github.rpg.model.GameState.level * 5)),
+            type,
+            (int) (config.health + (GameState.getInstance().getLevel() * 5)), // augmentation de vie à chaque niveau
             config.speed,
             config.damage,
             behavior,
@@ -39,7 +35,6 @@ public class EntityFactory {
         );
     }
 
-    // Le switch que tu voulais garder !
     private static EnemyBehavior getBehavior(String behaviorName) {
         if (behaviorName == null) return new StandStillBehavior();
 
@@ -48,7 +43,7 @@ public class EntityFactory {
                 return new ChaseBehavior();
             case "stand_still":
                 return new StandStillBehavior();
-            // Ajoutez vos futurs comportements ici (ex: "patrol", "shoot")
+            // on pourrait ajouter d'autres comportements ici
             default:
                 return new StandStillBehavior();
         }

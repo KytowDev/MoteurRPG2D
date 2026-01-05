@@ -13,7 +13,6 @@ public class DataManager {
 
     public static void load() {
         JsonReader reader = new JsonReader();
-        // Vérifiez que le fichier existe bien dans assets/data/entities.json
         JsonValue root = reader.parse(Gdx.files.internal("data/entities.json"));
 
         for (JsonValue entry : root) {
