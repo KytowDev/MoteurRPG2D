@@ -21,21 +21,17 @@ public class DungeonGenerator {
     public TiledMap generate(int roomCount) {
         TiledMap masterMap = loader.load("maps/prefabs/empty_base.tmx");
 
-        // --- 1. DÉTECTION AUTOMATIQUE DES SALLES ---
         List<String> availableRooms = new ArrayList<>();
         int index = 1;
 
-        // On cherche "room_1.tmx", puis "room_2.tmx", etc.
         while (Gdx.files.internal("maps/prefabs/room_" + index + ".tmx").exists()) {
             availableRooms.add("maps/prefabs/room_" + index + ".tmx");
-            System.out.println("Salle détectée : room_" + index);
             index++;
         }
 
         pasteChunk(masterMap, "maps/prefabs/room_start.tmx", 20);
         pasteChunk(masterMap, "maps/prefabs/corridor_h.tmx", 27);
 
-        // génération des salles aléatoires
         for (int i = 0; i < roomCount; i++) {
             String randomRoomPath = availableRooms.get(MathUtils.random(availableRooms.size() - 1));
             pasteChunk(masterMap, randomRoomPath, 20);
@@ -86,19 +82,14 @@ public class DungeonGenerator {
             if (obj instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) obj).getRectangle();
 
-                // 1. Calcul de la vraie position dans le monde
                 Rectangle newRect = new Rectangle(rect.x + pixelOffsetX, rect.y + pixelOffsetY, rect.width, rect.height);
                 RectangleMapObject newObj = new RectangleMapObject(newRect.x, newRect.y, newRect.width, newRect.height);
 
-                // 2. Copie des propriétés (qui contient malheureusement les vieilles valeurs x/y)
                 Iterator<String> keys = obj.getProperties().getKeys();
                 while (keys.hasNext()) {
                     String key = keys.next();
                     newObj.getProperties().put(key, obj.getProperties().get(key));
                 }
-
-                // 3. CORRECTION CRUCIALE : On force la mise à jour des propriétés X et Y
-                // pour que PlayScreen lise la bonne valeur décalée et pas la valeur locale du prefab
                 newObj.getProperties().put("x", newRect.x);
                 newObj.getProperties().put("y", newRect.y);
 

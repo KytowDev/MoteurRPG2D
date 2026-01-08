@@ -32,11 +32,9 @@ public class Main extends Game {
                 GameState.getInstance().incrementLevel();
 
                 DungeonGenerator gen = new DungeonGenerator();
-                // On peut aussi augmenter la taille du donjon : 3 salles + niveau actuel
                 int rooms = 4; //+ io.github.rpg.model.GameState.level;
                 setScreen(new PlayScreen(this, gen.generate(rooms)));
             } else {
-                // Si on charge le HUB (ou qu'on meurt), on peut reset ou non selon votre envie
                 if (mapPath.contains("hub")) {
                     GameState.getInstance().reset();
                 }

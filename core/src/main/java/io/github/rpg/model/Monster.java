@@ -10,16 +10,24 @@ public class Monster extends Entity {
     private int damage;
 
     public Monster(Vector2 pos, String type, int health, float spd, int damage, EnemyBehavior behavior, int w, int h) {
-        // On passe TOUT au parent. C'est beaucoup plus propre.
         super(pos, spd, health, type, w, h);
 
         this.damage = damage;
         this.behavior = behavior;
-        // Plus besoin de "this.type = ..." ni "this.hitbox = ..."
     }
 
     public int getDamage() {
         return damage;
+    }
+
+    public void interact(Player player) {
+        if (this.behavior instanceof InteractableStrategy) {
+            ((InteractableStrategy) this.behavior).onInteract(this, player);
+        }
+    }
+
+    public boolean hasInteractionStrategy() {
+        return this.behavior instanceof InteractableStrategy;
     }
 
     @Override

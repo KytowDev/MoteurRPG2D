@@ -22,11 +22,9 @@ public class DataManager {
             config.damage = entry.has("damage") ? entry.getInt("damage") : 0;
             config.texturePath = entry.getString("texture");
 
-            // Lecture des dimensions (avec valeurs par défaut si absentes)
             config.width = entry.has("width") ? entry.getInt("width") : 16;
             config.height = entry.has("height") ? entry.getInt("height") : 16;
 
-            // Lecture du comportement (ex: "chase")
             config.behavior = entry.has("behavior") ? entry.getString("behavior") : "stand_still";
 
             configs.put(entry.name, config);

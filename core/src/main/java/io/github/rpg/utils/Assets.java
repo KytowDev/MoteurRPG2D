@@ -3,15 +3,14 @@ package io.github.rpg.utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import io.github.rpg.model.EntityConfig;
-import com.badlogic.gdx.audio.Music; // Import Music
-import com.badlogic.gdx.audio.Sound; // Import Sound
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class Assets {
 
     public static final AssetManager manager = new AssetManager();
 
     public static void load() {
-        // Textures UI fixes
         manager.load("ui/heart_full.png", Texture.class);
         manager.load("ui/heart_half.png", Texture.class);
         manager.load("ui/heart_empty.png", Texture.class);
@@ -22,11 +21,7 @@ public class Assets {
         for (EntityConfig config : DataManager.getAllConfigs()) {
             if (config.texturePath != null && !config.texturePath.isEmpty()) {
                 String path = config.texturePath;
-
-                // Sécurité : on s'assure que le chemin finit par "/"
                 if (!path.endsWith("/")) path += "/";
-
-                // On charge simplement "run.png" et "idle.png" dans ce dossier
                 manager.load(path + "idle.png", Texture.class);
                 manager.load(path + "run.png", Texture.class);
             }
@@ -34,7 +29,7 @@ public class Assets {
     }
     public static void playSound(String name) {
         if (manager.isLoaded(name, Sound.class)) {
-            manager.get(name, Sound.class).play(0.5f); // 0.5f = 50% volume
+            manager.get(name, Sound.class).play(0.5f);
         }
     }
 

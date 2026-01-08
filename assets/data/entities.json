@@ -13,7 +13,7 @@
     "width": 32,
     "height": 36,
     "texture": "anims/bigmonster/",
-    "behavior": "chase"
+    "behavior": "ChaseBehavior"
   },
   "big_demon": {
     "health": 40,
@@ -22,7 +22,7 @@
     "width": 32,
     "height": 36,
     "texture": "anims/big_demon/",
-    "behavior": "chase"
+    "behavior": "ChaseBehavior"
   },
   "dwarf_npc": {
     "health": 100,
@@ -30,6 +30,6 @@
     "width": 16,
     "height": 28,
     "texture": "anims/dwarf_m/",
-    "behavior": "stand_still"
+    "behavior": "HealerBehavior"
   }
 }

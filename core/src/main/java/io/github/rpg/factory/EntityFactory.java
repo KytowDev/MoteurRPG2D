@@ -26,7 +26,7 @@ public class EntityFactory {
         return new Monster(
             pos,
             type,
-            (int) (config.health + (GameState.getInstance().getLevel() * 5)), // augmentation de vie à chaque niveau
+            (int) (config.health + (GameState.getInstance().getLevel() * 5)),
             config.speed,
             config.damage,
             behavior,
@@ -36,16 +36,11 @@ public class EntityFactory {
     }
 
     private static EnemyBehavior getBehavior(String behaviorName) {
-        if (behaviorName == null) return new StandStillBehavior();
-
-        switch (behaviorName) {
-            case "chase":
-                return new ChaseBehavior();
-            case "stand_still":
-                return new StandStillBehavior();
-            // on pourrait ajouter d'autres comportements ici
-            default:
-                return new StandStillBehavior();
+        try {
+            String fullPath = "io.github.rpg.model." + behaviorName;
+            return (EnemyBehavior) Class.forName(fullPath).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("ERREUR FATALE : Impossible de charger le comportement '" + behaviorName + "'", e);
         }
     }
 }

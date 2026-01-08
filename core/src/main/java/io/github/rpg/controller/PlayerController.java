@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import io.github.rpg.model.Entity;
+import io.github.rpg.model.Monster;
 import io.github.rpg.model.Player;
 
 public class PlayerController {
@@ -29,6 +30,30 @@ public class PlayerController {
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             player.getWeapon().attack(player, targets);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            checkInteraction(targets);
+        }
+    }
+
+    private void checkInteraction(Array<Entity> entities) {
+        float interactionRange = 30f;
+        Entity closestEntity = null;
+        float minDst = Float.MAX_VALUE;
+
+        for (Entity entity : entities) {
+            if (entity instanceof Monster) {
+                float dst = player.getPosition().dst(entity.getPosition());
+                if (dst < interactionRange && dst < minDst) {
+                    minDst = dst;
+                    closestEntity = entity;
+                }
+            }
+        }
+
+        if (closestEntity != null) {
+            ((Monster) closestEntity).interact(player);
         }
     }
 }

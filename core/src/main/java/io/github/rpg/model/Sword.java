@@ -11,7 +11,6 @@ public class Sword implements Weapon {
     private final float RANGE = 15f;
     private final float HITBOX_HEIGHT = 28f;
 
-    // état interne
     private float cooldown = 0;
     private float attackAnimTimer = 0;
 
@@ -45,7 +44,6 @@ public class Sword implements Weapon {
 
     @Override
     public String getType() {
-        // Ce nom servira à charger "swords/weapon_rusty_sword.png"
         return "rusty_sword";
     }
 
@@ -56,7 +54,6 @@ public class Sword implements Weapon {
 
     @Override
     public float getAttackProgress() {
-        // Retourne 1.0 au début de l'anim et 0.0 à la fin (pour interpoler la rotation de l'épée)
         return attackAnimTimer / ATTACK_ANIM_DURATION;
     }
 }

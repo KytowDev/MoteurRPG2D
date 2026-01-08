@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "prefabs/empty_base.tmx",
+    "activeFile": "prefabs/room_end.tmx",
     "expandedProjectPaths": [
         "prefabs",
         "."
@@ -36,14 +36,14 @@
         },
         "hub.tmx": {
             "expandedObjectLayers": [
-                5,
-                6
+                6,
+                5
             ],
             "scale": 2,
-            "selectedLayer": 0,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 316.25,
-                "y": 284
+                "x": 476.25,
+                "y": 374
             }
         },
         "main.tmx": {
@@ -82,11 +82,11 @@
             "expandedObjectLayers": [
                 5
             ],
-            "scale": 3.716875,
+            "scale": 1.5,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 159.94619135698673,
-                "y": 160.08071296451993
+                "x": 159.66666666666663,
+                "y": 159.3333333333333
             }
         },
         "prefabs/room_2.tmx": {
@@ -105,7 +105,7 @@
                 5
             ],
             "scale": 2.31265625,
-            "selectedLayer": 4,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 159.77298831160059,
                 "y": 159.98918991960002
@@ -130,10 +130,10 @@
                 5
             ],
             "scale": 2,
-            "selectedLayer": 0,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 151.75,
-                "y": 164.5
+                "x": -8.25,
+                "y": 74.5
             }
         },
         "test.tmx": {
@@ -167,11 +167,11 @@
     "recentFiles": [
         "hub.tmx",
         "prefabs/room_start.tmx",
-        "prefabs/room_end.tmx",
-        "prefabs/corridor_h.tmx",
         "prefabs/room_1.tmx",
         "prefabs/room_2.tmx",
         "prefabs/empty_base.tmx",
+        "prefabs/corridor_h.tmx",
+        "prefabs/room_end.tmx",
         "prefabs/room_normal.tmx",
         "dungeon1.tmx",
         "prefabs/empty_base_bigger.tmx",

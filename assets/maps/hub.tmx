@@ -176,12 +176,6 @@
  </layer>
  <objectgroup id="5" name="collisions"/>
  <objectgroup id="6" name="entities">
-  <object id="17" name="npc" x="206.833" y="189.333">
-   <properties>
-    <property name="type" value="dwarf_npc"/>
-   </properties>
-   <point/>
-  </object>
   <object id="23" name="portal" type="portal" x="303.5" y="148" width="31.5" height="14">
    <properties>
     <property name="destination" value="GENERATE"/>

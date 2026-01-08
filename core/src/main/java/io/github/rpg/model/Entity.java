@@ -6,17 +6,17 @@ import com.badlogic.gdx.utils.Array;
 
 public abstract class Entity {
 
-    private Vector2 pos;
-    private Rectangle hitbox;
-    private float speed;
+    private final Vector2 pos;
+    private final Rectangle hitbox;
+    private final float speed;
     private int health;
-    private String type;
+    private final String type;
 
     private boolean facingRight = true;
     private boolean isMoving = false;
     private float stateTime = 0;
     private float immunityTimer = 0;
-    private Vector2 knockback = new Vector2(0, 0);
+    private final Vector2 knockback = new Vector2(0, 0);
 
     public Entity(Vector2 pos, float speed, int health, String type, float width, float height) {
         this.pos = pos;
@@ -29,7 +29,6 @@ public abstract class Entity {
     public void update(float delta, Array<Rectangle> mapCollisions, Player player, Array<Entity> allEntities) {
         if (immunityTimer > 0) immunityTimer -= delta;
 
-        // recul
         if (knockback.len() > 10f) {
             move(knockback.x * delta, knockback.y * delta, mapCollisions);
             knockback.scl(0.90f);
@@ -73,9 +72,8 @@ public abstract class Entity {
     public void receiveDamage(int amount, Vector2 sourcePos) {
         if (immunityTimer > 0) return;
         health -= amount;
-        immunityTimer = 0.5f; // 0.5 seconde d'invulnérabilité
+        immunityTimer = 0.5f;
 
-        // Calcul du recul
         if (sourcePos != null) {
             knockback.set(pos.cpy().sub(sourcePos).nor().scl(250f));
         }
