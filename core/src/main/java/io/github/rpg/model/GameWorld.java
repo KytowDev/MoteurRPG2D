@@ -102,7 +102,6 @@ public class GameWorld implements Disposable {
         }
     }
 
-    // Getter pour la Vue
     public Entity getInteractableEntity() {
         return interactableEntity;
     }

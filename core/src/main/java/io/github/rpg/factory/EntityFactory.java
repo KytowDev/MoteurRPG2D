@@ -40,7 +40,7 @@ public class EntityFactory {
             String fullPath = "io.github.rpg.model." + behaviorName;
             return (EnemyBehavior) Class.forName(fullPath).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("ERREUR FATALE : Impossible de charger le comportement '" + behaviorName + "'", e);
+            throw new RuntimeException("Impossible de charger le comportement " + behaviorName, e);
         }
     }
 }

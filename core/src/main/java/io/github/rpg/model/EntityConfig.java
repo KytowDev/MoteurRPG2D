@@ -1,5 +1,7 @@
 package io.github.rpg.model;
 
+// pattern DTO
+
 public class EntityConfig {
     public int health;
     public float speed;
